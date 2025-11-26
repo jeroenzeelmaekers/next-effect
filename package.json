@@ -9,11 +9,20 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@effect-atom/atom": "^0.4.3",
+    "@effect-atom/atom-react": "^0.4.0",
+    "@effect/opentelemetry": "^0.59.1",
+    "@effect/platform": "^0.93.4",
+    "@effect/platform-node": "^0.101.2",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.208.0",
+    "@opentelemetry/sdk-trace-node": "^2.2.0",
+    "effect": "^3.19.6",
     "next": "16.0.4",
     "react": "19.2.0",
     "react-dom": "19.2.0"
   },
   "devDependencies": {
+    "@effect/language-service": "^0.57.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
