@@ -12,7 +12,6 @@ const ApiClientLive = Layer.effect(
   Effect.gen(function* () {
     const httpClient = yield* HttpClient.HttpClient;
     return httpClient.pipe(
-      HttpClient.tapRequest((request) => Effect.log(`REQUEST: ${request.url}`)),
       HttpClient.filterStatusOk,
       HttpClient.mapRequest(
         HttpClientRequest.prependUrl("https://jsonplaceholder.typicode.com"),

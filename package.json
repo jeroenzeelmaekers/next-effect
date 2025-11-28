@@ -6,11 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest"
   },
   "dependencies": {
-    "@effect-atom/atom": "^0.4.3",
-    "@effect-atom/atom-react": "^0.4.0",
     "@effect/opentelemetry": "^0.59.1",
     "@effect/platform": "^0.93.4",
     "@effect/platform-node": "^0.101.2",
@@ -23,6 +22,7 @@
   },
   "devDependencies": {
     "@effect/language-service": "^0.57.0",
+    "@effect/vitest": "^0.27.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -30,6 +30,8 @@
     "eslint": "^9",
     "eslint-config-next": "16.0.4",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^4.0.14"
   }
 }
