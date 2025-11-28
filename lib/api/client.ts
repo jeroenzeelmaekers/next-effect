@@ -1,6 +1,6 @@
 import { HttpClient, HttpClientRequest } from "@effect/platform";
 import { NodeHttpClient } from "@effect/platform-node";
-import { Context, Effect, Layer } from "effect";
+import { Config, Context, Effect, Layer } from "effect";
 
 export class ApiClient extends Context.Tag("ApiClient")<
   ApiClient,
@@ -10,12 +10,11 @@ export class ApiClient extends Context.Tag("ApiClient")<
 const ApiClientLive = Layer.effect(
   ApiClient,
   Effect.gen(function* () {
+    const baseUrl = yield* Config.string("API_BASE_URL");
     const httpClient = yield* HttpClient.HttpClient;
     return httpClient.pipe(
       HttpClient.filterStatusOk,
-      HttpClient.mapRequest(
-        HttpClientRequest.prependUrl("https://jsonplaceholder.typicode.com"),
-      ),
+      HttpClient.mapRequest(HttpClientRequest.prependUrl(baseUrl)),
     );
   }),
 );

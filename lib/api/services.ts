@@ -7,7 +7,8 @@ import { runtime } from "../runtime";
 
 export const getUsersFn = Effect.gen(function* () {
   const client = yield* ApiClient;
-  const response = yield* client.get("/users");
+  const request = HttpClientRequest.get("/users");
+  const response = yield* client.execute(request);
   return yield* HttpClientResponse.schemaBodyJson(Schema.Array(User))(response);
 }).pipe(
   Effect.scoped,
@@ -27,13 +28,10 @@ export const getUsersFn = Effect.gen(function* () {
 export const createUserFn = (data: typeof CreateUser.Type) =>
   Effect.gen(function* () {
     const client = yield* ApiClient;
-
     const request = HttpClientRequest.post("/users").pipe(
       HttpClientRequest.bodyJson(data),
     );
-
     const response = yield* client.execute(yield* request);
-
     return yield* HttpClientResponse.schemaBodyJson(User)(response);
   }).pipe(
     Effect.scoped,
