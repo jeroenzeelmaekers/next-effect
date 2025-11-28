@@ -1,8 +1,22 @@
-import { getUsersSafe } from "@/lib/api/services";
+import { getUsers } from "@/lib/api/services";
 import { Either, Match } from "effect";
+import { Suspense } from "react";
+import { CreateUserForm } from "./createUser/page";
 
-export default async function Home() {
-  const result = await getUsersSafe();
+export default function Home() {
+  return (
+    <>
+      <h1>NextJS + Effect</h1>
+      <Suspense fallback={<div>Loading users...</div>}>
+        <UserList />
+      </Suspense>
+      <CreateUserForm />
+    </>
+  );
+}
+
+async function UserList() {
+  const result = await getUsers();
 
   if (Either.isLeft(result)) {
     const errorMessage = Match.value(result.left).pipe(
@@ -15,15 +29,12 @@ export default async function Home() {
   }
 
   return (
-    <>
-      <h1>NextJS + Effect</h1>
-      <ul>
-        {result.right.map((user) => (
-          <li key={user.id}>
-            {user.id}. {user.name} ({user.username}) - {user.email}
-          </li>
-        ))}
-      </ul>
-    </>
+    <ul>
+      {result.right.map((user) => (
+        <li key={user.id}>
+          {user.id}. {user.name} ({user.username}) - {user.email}
+        </li>
+      ))}
+    </ul>
   );
 }

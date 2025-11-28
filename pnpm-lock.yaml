@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@effect/opentelemetry':
         specifier: ^0.59.1
-        version: 0.59.1(@effect/platform@0.93.4(effect@3.19.6))(@opentelemetry/api@1.9.0)(@opentelemetry/resources@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-metrics@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-node@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/semantic-conventions@1.38.0)(effect@3.19.6)
+        version: 0.59.1(@effect/platform@0.93.4(effect@3.19.6))(@opentelemetry/api@1.9.0)(@opentelemetry/resources@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-metrics@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-node@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-web@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/semantic-conventions@1.38.0)(effect@3.19.6)
       '@effect/platform':
         specifier: ^0.93.4
         version: 0.93.4(effect@3.19.6)
@@ -42,6 +42,9 @@ importers:
       '@effect/vitest':
         specifier: ^0.27.0
         version: 0.27.0(effect@3.19.6)(vitest@4.0.14(@opentelemetry/api@1.9.0)(@types/node@20.19.25)(jiti@2.6.1)(lightningcss@1.30.2))
+      '@opentelemetry/sdk-trace-web':
+        specifier: ^2.2.0
+        version: 2.2.0(@opentelemetry/api@1.9.0)
       '@tailwindcss/postcss':
         specifier: ^4
         version: 4.1.17
@@ -790,6 +793,12 @@ packages:
 
   '@opentelemetry/sdk-trace-node@2.2.0':
     resolution: {integrity: sha512-+OaRja3f0IqGG2kptVeYsrZQK9nKRSpfFrKtRBq4uh6nIB8bTBgaGvYQrQoRrQWQMA5dK5yLhDMDc0dvYvCOIQ==}
+    engines: {node: ^18.19.0 || >=20.6.0}
+    peerDependencies:
+      '@opentelemetry/api': '>=1.0.0 <1.10.0'
+
+  '@opentelemetry/sdk-trace-web@2.2.0':
+    resolution: {integrity: sha512-x/LHsDBO3kfqaFx5qSzBljJ5QHsRXrvS4MybBDy1k7Svidb8ZyIPudWVzj3s5LpPkYZIgi9e+7tdsNCnptoelw==}
     engines: {node: ^18.19.0 || >=20.6.0}
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.10.0'
@@ -2909,7 +2918,7 @@ snapshots:
 
   '@effect/language-service@0.57.0': {}
 
-  '@effect/opentelemetry@0.59.1(@effect/platform@0.93.4(effect@3.19.6))(@opentelemetry/api@1.9.0)(@opentelemetry/resources@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-metrics@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-node@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/semantic-conventions@1.38.0)(effect@3.19.6)':
+  '@effect/opentelemetry@0.59.1(@effect/platform@0.93.4(effect@3.19.6))(@opentelemetry/api@1.9.0)(@opentelemetry/resources@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-metrics@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-node@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-web@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/semantic-conventions@1.38.0)(effect@3.19.6)':
     dependencies:
       '@effect/platform': 0.93.4(effect@3.19.6)
       '@opentelemetry/semantic-conventions': 1.38.0
@@ -2920,6 +2929,7 @@ snapshots:
       '@opentelemetry/sdk-metrics': 2.2.0(@opentelemetry/api@1.9.0)
       '@opentelemetry/sdk-trace-base': 2.2.0(@opentelemetry/api@1.9.0)
       '@opentelemetry/sdk-trace-node': 2.2.0(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-trace-web': 2.2.0(@opentelemetry/api@1.9.0)
 
   '@effect/platform-node-shared@0.54.0(@effect/cluster@0.53.6(@effect/platform@0.93.4(effect@3.19.6))(@effect/rpc@0.72.2(@effect/platform@0.93.4(effect@3.19.6))(effect@3.19.6))(@effect/sql@0.48.0(@effect/experimental@0.57.4(@effect/platform@0.93.4(effect@3.19.6))(effect@3.19.6))(@effect/platform@0.93.4(effect@3.19.6))(effect@3.19.6))(@effect/workflow@0.13.0(@effect/experimental@0.57.4(@effect/platform@0.93.4(effect@3.19.6))(effect@3.19.6))(@effect/platform@0.93.4(effect@3.19.6))(@effect/rpc@0.72.2(@effect/platform@0.93.4(effect@3.19.6))(effect@3.19.6))(effect@3.19.6))(effect@3.19.6))(@effect/platform@0.93.4(effect@3.19.6))(@effect/rpc@0.72.2(@effect/platform@0.93.4(effect@3.19.6))(effect@3.19.6))(@effect/sql@0.48.0(@effect/experimental@0.57.4(@effect/platform@0.93.4(effect@3.19.6))(effect@3.19.6))(@effect/platform@0.93.4(effect@3.19.6))(effect@3.19.6))(effect@3.19.6)':
     dependencies:
@@ -3389,6 +3399,12 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/context-async-hooks': 2.2.0(@opentelemetry/api@1.9.0)
+      '@opentelemetry/core': 2.2.0(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-trace-base': 2.2.0(@opentelemetry/api@1.9.0)
+
+  '@opentelemetry/sdk-trace-web@2.2.0(@opentelemetry/api@1.9.0)':
+    dependencies:
+      '@opentelemetry/api': 1.9.0
       '@opentelemetry/core': 2.2.0(@opentelemetry/api@1.9.0)
       '@opentelemetry/sdk-trace-base': 2.2.0(@opentelemetry/api@1.9.0)
 

@@ -1,10 +1,11 @@
-import { Effect, Schema } from "effect";
+import { Effect, Schedule, Schema } from "effect";
 import { ApiClient, ApiLive } from "./client";
-import { HttpClientResponse } from "@effect/platform";
-import { User } from "./schema";
+import { HttpClientRequest, HttpClientResponse } from "@effect/platform";
+import { CreateUser, User } from "./schema";
 import { NetworkError, UserNotFound, ValidationError } from "./errors";
+import { runtime } from "../runtime";
 
-export const getUsers = Effect.gen(function* () {
+export const getUsersFn = Effect.gen(function* () {
   const client = yield* ApiClient;
   const response = yield* client.get("/users");
   return yield* HttpClientResponse.schemaBodyJson(Schema.Array(User))(response);
@@ -23,5 +24,41 @@ export const getUsers = Effect.gen(function* () {
   }),
 );
 
-export const getUsersSafe = () =>
-  Effect.runPromise(getUsers.pipe(Effect.provide(ApiLive), Effect.either));
+export const createUserFn = (data: typeof CreateUser.Type) =>
+  Effect.gen(function* () {
+    const client = yield* ApiClient;
+
+    const request = HttpClientRequest.post("/users").pipe(
+      HttpClientRequest.bodyJson(data),
+    );
+
+    const response = yield* client.execute(yield* request);
+
+    return yield* HttpClientResponse.schemaBodyJson(User)(response);
+  }).pipe(
+    Effect.scoped,
+    Effect.retry({
+      schedule: Schedule.exponential("100 millis").pipe(
+        Schedule.compose(Schedule.recurs(3)),
+      ),
+      while: (error) =>
+        error._tag === "RequestError" || error._tag === "ResponseError",
+    }),
+    Effect.withSpan("createUser"),
+    Effect.catchTags({
+      RequestError: (error) =>
+        Effect.fail(new NetworkError({ message: error.message })),
+      ResponseError: (error) =>
+        Effect.fail(new NetworkError({ message: error.message })),
+      ParseError: (error) =>
+        Effect.fail(new ValidationError({ message: String(error) })),
+    }),
+  );
+
+export const getUsers = () =>
+  runtime.runPromise(getUsersFn.pipe(Effect.provide(ApiLive), Effect.either));
+
+export const createUser = (data: typeof CreateUser.Type) =>
+  runtime.runPromise(
+    createUserFn(data).pipe(Effect.provide(ApiLive), Effect.either),
+  );

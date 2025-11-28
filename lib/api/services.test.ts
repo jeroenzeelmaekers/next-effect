@@ -1,7 +1,7 @@
 import { Effect, Either } from "effect";
 import { describe, expect } from "vitest";
 import { layer } from "@effect/vitest";
-import { getUsers } from "./services";
+import { getUsersFn } from "./services";
 import { UserNotFound, ValidationError } from "./errors";
 import { makeApiClientMock } from "@/test/helpers/makeApiClientMock";
 
@@ -16,7 +16,7 @@ describe("GetUsers", () => {
   layer(ApiClientMock)((it) => {
     it.effect("returns users on success", () =>
       Effect.gen(function* () {
-        const users = yield* getUsers;
+        const users = yield* getUsersFn;
         expect(users).toHaveLength(2);
         expect(users[0].name).toBe("John");
       }),
@@ -26,7 +26,7 @@ describe("GetUsers", () => {
   layer(ApiClient404)((it) => {
     it.effect("returns UserNotFound on 404", () =>
       Effect.gen(function* () {
-        const result = yield* Effect.either(getUsers);
+        const result = yield* Effect.either(getUsersFn);
         expect(Either.isLeft(result)).toBe(true);
         if (Either.isLeft(result)) {
           expect(result.left).toBeInstanceOf(UserNotFound);
@@ -38,7 +38,7 @@ describe("GetUsers", () => {
   layer(ApiClientInvalidData)((it) => {
     it.effect("returns ValidationError on invalid data", () =>
       Effect.gen(function* () {
-        const result = yield* Effect.either(getUsers);
+        const result = yield* Effect.either(getUsersFn);
         expect(Either.isLeft(result)).toBe(true);
         if (Either.isLeft(result)) {
           expect(result.left).toBeInstanceOf(ValidationError);
