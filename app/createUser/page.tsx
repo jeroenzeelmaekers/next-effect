@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import { createUserAction, ActionState } from "./action";
 
-export function CreateUserForm() {
+export default function CreateUserPage() {
   const [state, action, pending] = useActionState<ActionState, FormData>(
     createUserAction,
     null,
