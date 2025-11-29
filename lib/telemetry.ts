@@ -1,5 +1,6 @@
 import { NodeSdk } from "@effect/opentelemetry";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
+import { HttpInstrumentation } from "@opentelemetry/instrumentation-http";
 import {
   BatchSpanProcessor,
   ConsoleSpanExporter,
@@ -21,5 +22,6 @@ export const TelemetryLive = NodeSdk.layer(() => {
   return {
     resource: { serviceName: "nextjs-effect-app" },
     spanProcessor: spanProcessors,
+    instrumentations: [new HttpInstrumentation()],
   };
 });
