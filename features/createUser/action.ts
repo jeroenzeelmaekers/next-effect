@@ -1,6 +1,7 @@
 "use server";
 
 import { Match } from "effect";
+import { revalidatePath } from "next/cache";
 import { createUser } from "@/lib/api/services";
 
 export type ActionState =
@@ -15,7 +16,6 @@ const matchError = Match.type<{ _tag: string }>().pipe(
 );
 
 export async function createUserAction(
-  _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
   const data = {
@@ -29,6 +29,8 @@ export async function createUserAction(
   if (result._tag === "Left") {
     return { success: false, error: matchError(result.left) };
   }
+
+  revalidatePath("/");
 
   return { success: true, user: { ...result.right } };
 }

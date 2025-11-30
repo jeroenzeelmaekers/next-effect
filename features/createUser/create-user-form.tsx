@@ -2,10 +2,29 @@
 
 import { useActionState } from "react";
 import { createUserAction, ActionState } from "./action";
+import { OptimisticUser } from "@/app/users-list";
+import { CreateUser } from "@/lib/api/schema";
+import { Schema } from "effect";
 
-export default function CreateUserPage() {
+type CreateUserFormProps = {
+  addOptimisticUserAction: (user: OptimisticUser) => void;
+};
+
+const decodeCreateUser = Schema.decodeUnknownSync(CreateUser);
+
+export default function CreateUserForm({
+  addOptimisticUserAction,
+}: CreateUserFormProps) {
   const [state, action, pending] = useActionState<ActionState, FormData>(
-    createUserAction,
+    async (_, formData) => {
+      const data = decodeCreateUser(Object.fromEntries(formData));
+      addOptimisticUserAction({
+        id: 0,
+        ...data,
+        pending: true,
+      });
+      return createUserAction(formData);
+    },
     null,
   );
   return (

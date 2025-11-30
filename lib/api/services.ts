@@ -25,6 +25,9 @@ export const getUsersFn = Effect.gen(function* () {
   }),
 );
 
+export const getUsers = () =>
+  runtime.runPromise(getUsersFn.pipe(Effect.provide(ApiLive), Effect.either));
+
 export const createUserFn = (data: typeof CreateUser.Type) =>
   Effect.gen(function* () {
     const client = yield* ApiClient;
@@ -52,9 +55,6 @@ export const createUserFn = (data: typeof CreateUser.Type) =>
         Effect.fail(new ValidationError({ message: String(error) })),
     }),
   );
-
-export const getUsers = () =>
-  runtime.runPromise(getUsersFn.pipe(Effect.provide(ApiLive), Effect.either));
 
 export const createUser = (data: typeof CreateUser.Type) =>
   runtime.runPromise(
