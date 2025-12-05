@@ -5,7 +5,10 @@ import { revalidatePath } from "next/cache";
 import { createUser } from "@/lib/api/services";
 
 export type ActionState =
-  | { success: true; user: { id: number; name: string; email: string } }
+  | {
+      success: true;
+      user: { id: number; name: string; username: string; email: string };
+    }
   | { success: false; error: string }
   | null;
 

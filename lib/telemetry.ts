@@ -15,7 +15,7 @@ export const TelemetryLive = NodeSdk.layer(() => {
     ),
   ];
 
-  if (process.env.DEBUG_OTLP) {
+  if (process.env.DEBUG_OTLP === "true") {
     spanProcessors.push(new SimpleSpanProcessor(new ConsoleSpanExporter()));
   }
 

@@ -2,7 +2,12 @@ import { Effect, Schedule, Schema } from "effect";
 import { ApiClient, ApiLive } from "./client";
 import { HttpClientRequest, HttpClientResponse } from "@effect/platform";
 import { CreateUser, User } from "./schema";
-import { NetworkError, UserNotFound, ValidationError } from "./errors";
+import {
+  AuthError,
+  NetworkError,
+  UserNotFound,
+  ValidationError,
+} from "./errors";
 import { runtime } from "../runtime";
 
 export const getUsersFn = Effect.gen(function* () {
@@ -13,7 +18,10 @@ export const getUsersFn = Effect.gen(function* () {
 }).pipe(
   Effect.scoped,
   Effect.withSpan("getUsers"),
+  Effect.timeout("5 seconds"),
   Effect.catchTags({
+    AccessTokenError: (error) =>
+      Effect.fail(new AuthError({ message: error.message })),
     RequestError: (error) =>
       Effect.fail(new NetworkError({ message: error.message })),
     ResponseError: (error) =>
@@ -22,6 +30,8 @@ export const getUsersFn = Effect.gen(function* () {
         : Effect.fail(new NetworkError({ message: error.message })),
     ParseError: (error) =>
       Effect.fail(new ValidationError({ message: String(error) })),
+    TimeoutException: (error) =>
+      Effect.fail(new NetworkError({ message: error.message })),
   }),
 );
 
@@ -47,6 +57,8 @@ export const createUserFn = (data: typeof CreateUser.Type) =>
     }),
     Effect.withSpan("createUser"),
     Effect.catchTags({
+      AccessTokenError: (error) =>
+        Effect.fail(new AuthError({ message: error.message })),
       RequestError: (error) =>
         Effect.fail(new NetworkError({ message: error.message })),
       ResponseError: (error) =>

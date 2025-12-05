@@ -26,8 +26,7 @@ export function UsersList({ users }: { users: readonly User[] }) {
 }
 
 function UserListItem({ user }: { user: OptimisticUser }) {
-  const isPending = (user: User | OptimisticUser): user is OptimisticUser =>
-    "pending" in user && user.pending === true;
+  const isPending = (user: OptimisticUser) => user.pending === true;
 
   return (
     <li

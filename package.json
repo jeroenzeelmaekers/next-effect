@@ -10,32 +10,34 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@effect/opentelemetry": "^0.59.1",
-    "@effect/platform": "^0.93.4",
-    "@effect/platform-node": "^0.101.2",
+    "@auth0/nextjs-auth0": "^4.13.2",
+    "@effect/opentelemetry": "^0.59.2",
+    "@effect/platform": "^0.93.6",
+    "@effect/platform-node": "^0.103.0",
     "@opentelemetry/exporter-trace-otlp-http": "^0.208.0",
     "@opentelemetry/instrumentation-fetch": "^0.208.0",
     "@opentelemetry/instrumentation-http": "^0.208.0",
     "@opentelemetry/sdk-trace-node": "^2.2.0",
     "clsx": "^2.1.1",
-    "effect": "^3.19.6",
-    "next": "16.0.4",
-    "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "effect": "^3.19.9",
+    "next": "16.0.7",
+    "react": "19.2.1",
+    "react-dom": "19.2.1",
+    "zod": "^4.1.13"
   },
   "devDependencies": {
-    "@effect/language-service": "^0.57.0",
+    "@effect/language-service": "^0.60.0",
     "@effect/vitest": "^0.27.0",
     "@opentelemetry/sdk-trace-web": "^2.2.0",
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.0.4",
-    "tailwindcss": "^4",
-    "typescript": "^5",
+    "@tailwindcss/postcss": "^4.1.17",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9.39.1",
+    "eslint-config-next": "16.0.7",
+    "tailwindcss": "^4.1.17",
+    "typescript": "^5.9.3",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^4.0.14"
+    "vitest": "^4.0.15"
   }
 }

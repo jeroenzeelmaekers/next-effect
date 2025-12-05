@@ -1,5 +1,9 @@
 import { Data } from "effect";
 
+export class AuthError extends Data.TaggedError("AuthError")<{
+  readonly message: string;
+}> {}
+
 export class NetworkError extends Data.TaggedError("NetworkError")<{
   readonly message: string;
 }> {}
