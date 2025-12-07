@@ -1,6 +1,6 @@
 "use server";
 
-import { Match } from "effect";
+import { Result } from "@effect-atom/atom-react";
 import { revalidatePath } from "next/cache";
 import { createUser } from "@/lib/api/services";
 
@@ -11,12 +11,6 @@ export type ActionState =
     }
   | { success: false; error: string }
   | null;
-
-const matchError = Match.type<{ _tag: string }>().pipe(
-  Match.tag("NetworkError", () => "Unable to connect. Please try again later."),
-  Match.tag("ValidationError", () => "Invalid response from server."),
-  Match.orElse(() => "An unexpected error occurred."),
-);
 
 export async function createUserAction(
   formData: FormData,
@@ -29,11 +23,25 @@ export async function createUserAction(
 
   const result = await createUser(data);
 
-  if (result._tag === "Left") {
-    return { success: false, error: matchError(result.left) };
-  }
-
-  revalidatePath("/");
-
-  return { success: true, user: { ...result.right } };
+  return Result.builder(result)
+    .onErrorTag("NetworkError", () => ({
+      success: false as const,
+      error: "Unable to connect. Please try again later.",
+    }))
+    .onErrorTag("ValidationError", () => ({
+      success: false as const,
+      error: "Invalid response from server.",
+    }))
+    .onDefect(() => ({
+      success: false as const,
+      error: "An unexpected error occurred.",
+    }))
+    .onSuccess((user) => {
+      revalidatePath("/");
+      return { success: true as const, user: { ...user } };
+    })
+    .orElse(() => ({
+      success: false as const,
+      error: "An unexpected error occurred.",
+    }));
 }

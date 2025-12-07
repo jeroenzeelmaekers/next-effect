@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { createUserAction, ActionState as ServerActionState } from "./action";
-import { OptimisticUser } from "@/app/users-list";
+import { useUsers } from "@/app/users-context";
 import { z } from "zod";
 
 const createUserValidation = z.object({
@@ -19,13 +19,9 @@ type ActionState =
   | ServerActionState
   | { success: false; fieldErrors: FieldErrors };
 
-type CreateUserFormProps = {
-  addOptimisticUserAction: (user: OptimisticUser) => void;
-};
+export default function CreateUserForm() {
+  const { addOptimisticUser } = useUsers();
 
-export default function CreateUserForm({
-  addOptimisticUserAction,
-}: CreateUserFormProps) {
   const [state, action, pending] = useActionState<ActionState, FormData>(
     async (_, formData) => {
       const rawData = {
@@ -43,7 +39,7 @@ export default function CreateUserForm({
         };
       }
 
-      addOptimisticUserAction({
+      addOptimisticUser({
         id: 0,
         ...validated.data,
         pending: true,

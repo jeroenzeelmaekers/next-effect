@@ -7,21 +7,24 @@ import {
   SimpleSpanProcessor,
   SpanProcessor,
 } from "@opentelemetry/sdk-trace-node";
+import { Config, Effect } from "effect";
 
-export const TelemetryLive = NodeSdk.layer(() => {
-  const spanProcessors: SpanProcessor[] = [
-    new BatchSpanProcessor(
-      new OTLPTraceExporter({ url: "http://localhost:4318/v1/traces" }),
-    ),
-  ];
+export const TelemetryLive = NodeSdk.layer(
+  Effect.gen(function* () {
+    const OTLPUrl = yield* Config.string("OTLP_EXPORTER_URL");
 
-  if (process.env.DEBUG_OTLP === "true") {
-    spanProcessors.push(new SimpleSpanProcessor(new ConsoleSpanExporter()));
-  }
+    const spanProcessors: SpanProcessor[] = [
+      new BatchSpanProcessor(new OTLPTraceExporter({ url: OTLPUrl })),
+    ];
 
-  return {
-    resource: { serviceName: "nextjs-effect-app" },
-    spanProcessor: spanProcessors,
-    instrumentations: [new HttpInstrumentation()],
-  };
-});
+    if (process.env.DEBUG_OTLP === "true") {
+      spanProcessors.push(new SimpleSpanProcessor(new ConsoleSpanExporter()));
+    }
+
+    return {
+      resource: { serviceName: "civilian-portal" },
+      spanProcessor: spanProcessors,
+      instrumentations: [new HttpInstrumentation()],
+    };
+  }),
+);

@@ -1,16 +1,12 @@
 import { Effect, Schedule, Schema } from "effect";
-import { ApiClient, ApiLive } from "./client";
+import { ApiClient } from "./client";
 import { HttpClientRequest, HttpClientResponse } from "@effect/platform";
 import { CreateUser, User } from "./schema";
-import {
-  AuthError,
-  NetworkError,
-  UserNotFound,
-  ValidationError,
-} from "./errors";
+import { NetworkError, UserNotFound, ValidationError } from "./errors";
 import { runtime } from "../runtime";
+import { Result } from "@effect-atom/atom-react";
 
-export const getUsersFn = Effect.gen(function* () {
+const getUsersEffect = Effect.gen(function* () {
   const client = yield* ApiClient;
   const request = HttpClientRequest.get("/users");
   const response = yield* client.execute(request);
@@ -20,8 +16,6 @@ export const getUsersFn = Effect.gen(function* () {
   Effect.withSpan("getUsers"),
   Effect.timeout("5 seconds"),
   Effect.catchTags({
-    AccessTokenError: (error) =>
-      Effect.fail(new AuthError({ message: error.message })),
     RequestError: (error) =>
       Effect.fail(new NetworkError({ message: error.message })),
     ResponseError: (error) =>
@@ -35,8 +29,10 @@ export const getUsersFn = Effect.gen(function* () {
   }),
 );
 
-export const getUsers = () =>
-  runtime.runPromise(getUsersFn.pipe(Effect.provide(ApiLive), Effect.either));
+export const getUsers = async () => {
+  const exit = await runtime.runPromiseExit(getUsersEffect);
+  return Result.fromExit(exit);
+};
 
 export const createUserFn = (data: typeof CreateUser.Type) =>
   Effect.gen(function* () {
@@ -57,8 +53,6 @@ export const createUserFn = (data: typeof CreateUser.Type) =>
     }),
     Effect.withSpan("createUser"),
     Effect.catchTags({
-      AccessTokenError: (error) =>
-        Effect.fail(new AuthError({ message: error.message })),
       RequestError: (error) =>
         Effect.fail(new NetworkError({ message: error.message })),
       ResponseError: (error) =>
@@ -68,7 +62,7 @@ export const createUserFn = (data: typeof CreateUser.Type) =>
     }),
   );
 
-export const createUser = (data: typeof CreateUser.Type) =>
-  runtime.runPromise(
-    createUserFn(data).pipe(Effect.provide(ApiLive), Effect.either),
-  );
+export const createUser = async (data: typeof CreateUser.Type) => {
+  const exit = await runtime.runPromiseExit(createUserFn(data));
+  return Result.fromExit(exit);
+};

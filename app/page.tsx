@@ -1,7 +1,7 @@
-import { getUsers } from "@/lib/api/services";
-import { Either, Match } from "effect";
 import { Suspense } from "react";
-import { UsersList } from "./users-list";
+import { UserListHandler } from "./users-list-handler";
+import { UsersProvider } from "./users-context";
+import CreateUserForm from "@/features/createUser/create-user-form";
 
 export const dynamic = "force-dynamic";
 
@@ -9,28 +9,12 @@ export default function Home() {
   return (
     <>
       <h1>Users</h1>
-      <Suspense fallback={<div>Loading users...</div>}>
-        <UserListContainer />
-      </Suspense>
+      <UsersProvider>
+        <Suspense fallback={<span id="loading">Loading users...</span>}>
+          <UserListHandler />
+        </Suspense>
+        <CreateUserForm />
+      </UsersProvider>
     </>
   );
-}
-
-async function UserListContainer() {
-  const result = await getUsers();
-
-  return Either.match(result, {
-    onLeft: (error) => (
-      <span id="error-container" className="text-red-500 text-sm">
-        {Match.value(error).pipe(
-          Match.tag("NetworkError", (e) => `Network error: ${e.message}`),
-          Match.tag("UserNotFound", (e) => `User not found: ID ${e.userId}`),
-          Match.tag("ValidationError", (e) => `Validation error: ${e.message}`),
-          Match.tag("AuthError", (e) => `Authentication error: ${e.message}`),
-          Match.orElse(() => `Something went wrong`),
-        )}
-      </span>
-    ),
-    onRight: (users) => <UsersList users={users} />,
-  });
 }
